@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # shellcheck source=./BENCHMARKS.config
-. BENCHMARKS.config
+. ./BENCHMARKS.config
 
 cd CFPQ_PyAlgo || return 1
 INSTANCE_CORES_THREADS="$(cat /proc/cpuinfo | grep "cores" |uniq|awk '{print $4}')_$(cat /proc/cpuinfo | grep -c "processor")"

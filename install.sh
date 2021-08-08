@@ -1,6 +1,6 @@
 #!/bin/sh
 
-set -e
+set -ex
 
 download_dataset()
 {
@@ -10,13 +10,20 @@ download_dataset()
 }
 
 # shellcheck source=./BENCHMARKS.config
-. BENCHMARKS.config
+. ./BENCHMARKS.config
 
-# Git, Python, Pip
-echo "Installing wget, git, python3, pip3"
+# Git, Python, Pip, CMake
+echo "Installing wget, git, python3, pip3, cmake"
 apt update
 apt upgrade -y
-apt install wget git python3 python3-pip -y
+DEBIAN_FRONTEND=noninteractive apt install -y \
+	wget \
+	git \
+	python3 \
+	python3-pip \
+	cmake \
+	make \
+	libomp-dev
 
 # SuiteSparse:GraphBLAS
 echo "Installing SuiteSparse:GraphBLAS"
@@ -27,7 +34,8 @@ git clone --branch "${SS_RELEASE}" --single-branch https://github.com/DrTimothyA
 cd GraphBLAS/build
 cmake .. -DGB_BURBLE="${SS_BURBLE}" -DGBCOMPACT="${SS_COMPACT}"
 make "-j$(nproc)"
-sudo make install
+make install
+export LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
 cd ../..
 
 # pygraphblas
@@ -35,8 +43,8 @@ echo "Installing pygraphblas"
 
 git clone --branch "${PYGRAPHBLAS_VERSION}" --single-branch https://github.com/Graphegon/pygraphblas.git
 cd pygraphblas
-pip3 install -r notebook-requirements.txt
-python3 setup.py install --user
+pip3 install numpy==1.20
+python3 setup.py install
 cd ..
 
 # CFPQ_PyAlgo
@@ -48,7 +56,7 @@ cd CFPQ_PyAlgo
 echo "Installing deps/"
 cd deps/CFPQ_Data
 pip3 install -r requirements.txt
-python3 setup.py install --user
+python3 setup.py install
 
 cd ../../
 pip3 install -r requirements.txt
