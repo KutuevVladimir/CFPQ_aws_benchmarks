@@ -30,7 +30,7 @@ echo "Installing SuiteSparse:GraphBLAS"
 SS_BURBLE=0
 SS_COMPACT=0
 
-git clone --branch "${SS_RELEASE}" --single-branch https://github.com/DrTimothyAldenDavis/GraphBLAS.git
+git clone --branch "${SS_RELEASE}" --single-branch --depth=1 https://github.com/DrTimothyAldenDavis/GraphBLAS.git
 cd GraphBLAS/build
 cmake .. -DGB_BURBLE="${SS_BURBLE}" -DGBCOMPACT="${SS_COMPACT}"
 make "-j$(nproc)"
