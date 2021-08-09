@@ -47,6 +47,8 @@ cd ../..
 echo "Installing pygraphblas"
 
 git clone --branch "${PYGRAPHBLAS_VERSION}" --single-branch https://github.com/Graphegon/pygraphblas.git
+echo "Suppress problem with types.py"
+cp -f types.py pygraphblas/pygraphblas
 cd pygraphblas
 pip3 install numpy==1.20
 python3 setup.py install
